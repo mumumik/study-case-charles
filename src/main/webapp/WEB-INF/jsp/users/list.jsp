@@ -27,7 +27,7 @@
 					onclick="window.location.href='form'; return false;"
 					class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"
 			 />
-    		<table class="mdl-data-table mdl-js-data-table mdl-data-table--selectable mdl-shadow--2dp">
+    		<table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp">
               <thead>
                 <tr>
                   <th class="mdl-data-table__cell--non-numeric">User Name</th>
