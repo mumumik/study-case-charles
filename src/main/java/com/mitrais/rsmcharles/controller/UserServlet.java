@@ -15,7 +15,12 @@ import java.util.List;
 @WebServlet("/users/*")
 public class UserServlet extends AbstractController
 {
-    @Override
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	@Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
     	try {
@@ -29,6 +34,17 @@ public class UserServlet extends AbstractController
             case "/form":
             	addUser(request, response);
             	break;
+            case "/delete":
+            	deleteUser(request, response);
+            	break;
+            case "/load":
+            	loadUser(request, response);
+            	break;
+            case "/update":
+            	updateUser(request, response);
+            	break;
+            default:
+            	listUsers(request, response);
             }
     	}
     	catch(Exception e) {
@@ -36,7 +52,65 @@ public class UserServlet extends AbstractController
     	}
     }
     
-    private void listUsers(HttpServletRequest request, HttpServletResponse response) 
+    private void updateUser(HttpServletRequest request, HttpServletResponse response) 
+    throws Exception{
+    	
+    	//read user info from form data
+    	long id = Long.parseLong(request.getParameter("userId"));
+    	String username = request.getParameter("username");
+    	String userpass = request.getParameter("userpass");
+    	
+    	//create a new user object
+    	User theUser = new User(id, username, userpass);
+    		
+    	//perform update on database
+    	UserDao userDao = UserDaoImpl.getInstance();
+    	userDao.update(theUser);
+    			
+    	//send back to main page (user list)
+    	RequestDispatcher dispatcher = request.getRequestDispatcher("/users/list");
+    	dispatcher.forward(request, response);
+		
+	}
+
+	private void loadUser(HttpServletRequest request, HttpServletResponse response) 
+    	throws Exception{
+    	
+    	String path = getTemplatePath(request.getServletPath()+request.getPathInfo());
+    	
+    	// read user info from form data
+    	long userId = Long.parseLong(request.getParameter("userId"));
+    	
+    	//find user from database based on id
+    	UserDao userDao = UserDaoImpl.getInstance();
+    	User theUser = userDao.find(userId);
+		
+    	request.setAttribute("the_user", theUser);
+    	
+    	// send jsp page: load.jsp
+    	RequestDispatcher dispatcher = 
+    						request.getRequestDispatcher(path);
+    	dispatcher.forward(request,response);
+    	
+	}
+
+	private void deleteUser(HttpServletRequest request, HttpServletResponse response) 
+    	throws Exception{
+    	
+    	//read user info from form data
+    	long userId = Long.parseLong(request.getParameter("userId"));
+    	
+    	//delete user from database
+    	UserDao userDao = UserDaoImpl.getInstance();
+    	userDao.delete(userId);
+    	
+    	// send to JSP Page (view)
+    	RequestDispatcher dispatcher = request.getRequestDispatcher("/users/list");
+    	dispatcher.forward(request, response);
+    	
+	}
+
+	private void listUsers(HttpServletRequest request, HttpServletResponse response) 
     		throws Exception{
     	String path = getTemplatePath(request.getServletPath()+request.getPathInfo());
     	
@@ -58,7 +132,7 @@ public class UserServlet extends AbstractController
 		//create a new user object
 		User theUser = new User(username,userpass);
 		
-		//add the song to the database
+		//add the user to the database
 		UserDao userDao = UserDaoImpl.getInstance();
 		userDao.save(theUser);
 		

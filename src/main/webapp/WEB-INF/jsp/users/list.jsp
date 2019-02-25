@@ -38,15 +38,24 @@
               <tbody>
               <c:forEach items = "${users}" var="user">
               
-              		<!-- set up a delete link for each song -->
+              		<!-- set up a delete link for each user -->
 					<c:url var="deleteLink" value="delete">
+						<c:param name="userId" value="${user.id}" />
+					</c:url>
+					
+					<!-- set up an update link for each user -->
+					<c:url var="updateLink" value="load">
 						<c:param name="userId" value="${user.id}" />
 					</c:url>
 					
                   	<tr>
                     	<td class="mdl-data-table__cell--non-numeric"><c:out value = "${user.userName}"/></td>
                     	<td><c:out value = "${user.password}"/></td>
-                    	<td><a href="${deleteLink}">Delete</a></td>
+                    	<td>
+                    		<a href="${updateLink}">Update</a>
+                    		 | 
+                    		<a href="${deleteLink}" onclick="if (!(confirm('Are you sure want to delete this user?'))) return false">Delete</a>
+                    	</td>
                   	</tr>
               </c:forEach>
               </tbody>

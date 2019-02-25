@@ -19,7 +19,7 @@ import java.util.Optional;
 public class UserDaoImpl implements UserDao
 {
     @Override
-    public Optional<User> find(Long id)
+    public User find(Long id)
     {
         try (Connection connection = DataSourceFactory.getConnection())
         {
@@ -29,7 +29,7 @@ public class UserDaoImpl implements UserDao
             if (rs.next())
             {
                 User user = new User(rs.getLong("id"), rs.getString("user_name"), rs.getString("password"));
-                return Optional.of(user);
+                return user;
             }
         }
         catch (SQLException ex)
@@ -37,7 +37,7 @@ public class UserDaoImpl implements UserDao
             ex.printStackTrace();
         }
 
-        return Optional.empty();
+        return null;
     }
 
     @Override
@@ -89,6 +89,7 @@ public class UserDaoImpl implements UserDao
             PreparedStatement stmt = connection.prepareStatement("UPDATE user SET user_name=?, password=? WHERE id=?");
             stmt.setString(1, user.getUserName());
             stmt.setString(2, user.getPassword());
+            stmt.setLong(3, user.getId());
             int i = stmt.executeUpdate();
             if(i == 1) {
                 return true;
@@ -102,12 +103,12 @@ public class UserDaoImpl implements UserDao
     }
 
     @Override
-    public boolean delete(User user)
+    public boolean delete(long userId)
     {
         try (Connection connection = DataSourceFactory.getConnection())
         {
             PreparedStatement stmt = connection.prepareStatement("DELETE FROM user WHERE id=?");
-            stmt.setLong(1, user.getId());
+            stmt.setLong(1, userId);
             int i = stmt.executeUpdate();
             if(i == 1) {
                 return true;
