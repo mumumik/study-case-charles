@@ -24,13 +24,14 @@ public class UserDaoImplTest {
 		
 		// SETUP
         when(userDaoMock.find((long)1)).thenReturn(
-                        new User((long)1, "User 1", "1234")
+        		Optional.of(new User((long)1, "User 1", "1234"))
         );
         
         // ACTION
-        User theUser = userDaoMock.find((long)1);
-        
+        Optional<User> actual = userDaoMock.find((long)1);
+
         // ASSERTION
+        User theUser = actual.get();
         assertEquals((long)1, (long)theUser.getId());
         assertEquals("User 1", theUser.getUserName());
         assertEquals("1234", theUser.getPassword());
@@ -106,19 +107,4 @@ public class UserDaoImplTest {
 		
         
 	}
-	
-	@Test
-	public void save_ReturnsTrue() {
-		
-		// SETUP
-		User theUser = new User("charlessss","1234");
-		
-		// ACTION
-		boolean actual = userDaoMock.save(theUser);
-		
-		// ASSERTION
-		assertEquals(true, actual);
-		
-	}
-
 }

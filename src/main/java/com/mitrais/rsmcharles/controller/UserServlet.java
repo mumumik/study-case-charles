@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 @WebServlet("/users/*")
 public class UserServlet extends AbstractController
@@ -83,7 +84,8 @@ public class UserServlet extends AbstractController
     	
     	//find user from database based on id
     	UserDao userDao = UserDaoImpl.getInstance();
-    	User theUser = userDao.find(userId);
+    	Optional<User> user = userDao.find(userId);
+    	User theUser = user.get();
 		
     	request.setAttribute("the_user", theUser);
     	

@@ -3,6 +3,8 @@ package com.mitrais.rmscharles.dao;
 import java.util.List;
 import java.util.Optional;
 
+import com.mitrais.rmscharles.model.User;
+
 /**
  * This interface provides generic CRUD operation. See <a href="https://en.wikipedia.org/wiki/Create,_read,_update_and_delete>CRUD</a>
  * Its uses generic to provide type-safe operation.
@@ -14,7 +16,7 @@ public interface Dao<T, ID>
      * @param id id
      * @return record wrapped by {@link Optional}
      */
-    T find(ID id);
+	Optional<User> find(ID id);
 
     /**
      * Find all records

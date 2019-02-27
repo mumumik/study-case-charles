@@ -19,7 +19,7 @@ import java.util.Optional;
 public class UserDaoImpl implements UserDao
 {
     @Override
-    public User find(Long id)
+    public Optional<User> find(Long id)
     {
         try (Connection connection = DataSourceFactory.getConnection())
         {
@@ -29,7 +29,7 @@ public class UserDaoImpl implements UserDao
             if (rs.next())
             {
                 User user = new User(rs.getLong("id"), rs.getString("user_name"), rs.getString("password"));
-                return user;
+                return Optional.of(user);
             }
         }
         catch (SQLException ex)
@@ -37,7 +37,7 @@ public class UserDaoImpl implements UserDao
             ex.printStackTrace();
         }
 
-        return null;
+        return Optional.empty();
     }
 
     @Override
